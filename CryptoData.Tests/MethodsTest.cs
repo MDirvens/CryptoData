@@ -12,7 +12,7 @@ namespace CryptoData.Tests
     public class MethodsTest
     {
         private Methods _methods;
-        private CryptoDataDbContext context;
+        private CryptoDataDbContext _context;
         public BinanceStreamBookPrice receivedData;
         private DateTime _time;
         private string _stringTime;
@@ -21,7 +21,7 @@ namespace CryptoData.Tests
         public void Setup()
         {
             _methods = new();
-            context = new();
+            _context = new();
             _time = new(1487, 04, 11, 17, 13, 43, 861);
             _stringTime = _time.ToString("yyyy.MM.dd HH:mm:ss:fff");
         }
@@ -72,7 +72,7 @@ namespace CryptoData.Tests
                 BestAskQty = 40.66000000m
             };
 
-            int expected = context.CryptoData.Count() + 1;
+            int expected = _context.CryptoData.Count() + 1;
             list.Add(CryptoData);
             _methods.list.Add(CryptoData);
 
@@ -80,7 +80,7 @@ namespace CryptoData.Tests
             _methods.AddData(list);
 
             //Assert
-            Assert.AreEqual(expected, context.CryptoData.Count());
+            Assert.AreEqual(expected, _context.CryptoData.Count());
         }
     }
 }
