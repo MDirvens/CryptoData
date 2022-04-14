@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoData.Migrations
 {
     [DbContext(typeof(CryptoDataDbContext))]
-    [Migration("20220412153218_Data")]
-    partial class Data
+    [Migration("20220414130325_Da")]
+    partial class Da
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,10 +22,8 @@ namespace CryptoData.Migrations
 
             modelBuilder.Entity("CryptoData.Models.CryptoDataDto", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<long>("OrderBookUpdateId")
+                        .HasColumnType("bigint");
 
                     b.Property<decimal>("BestAskPrice")
                         .HasColumnType("decimal(18,2)");
@@ -39,16 +37,13 @@ namespace CryptoData.Migrations
                     b.Property<decimal>("BestBidQty")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long>("OrderBookUpdateId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Symbol")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TimeStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderBookUpdateId");
 
                     b.ToTable("CryptoData");
                 });

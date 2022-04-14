@@ -1,16 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CryptoData.Models;
 using Binance.Net.Objects.Models.Spot.Socket;
+using CryptoExchange.Net.Sockets;
 
 namespace CryptoData.Storage
 {
     public class Methods
     {
-        private static readonly CryptoDataDbContext _context = new();
+        private readonly CryptoDataDbContext _context = new();
+        private List<CryptoDataDto> _listToAdd = new();
+        public List<CryptoDataDto> list = new();
 
-        public void OnMessage(BinanceStreamBookPrice data, DateTime timeStamp)
+        public void OnMessage(DataEvent<BinanceStreamBookPrice> data)
         {
-            AddData(Converter(data, timeStamp));
+           list.Add(Converter(data.Data, data.Timestamp));
+
+            if (list.Count() == 100)
+            {
+                _listToAdd = list.OrderBy(o => o.OrderBookUpdateId).ToList();
+                AddData(_listToAdd);
+            }
         }
 
         public CryptoDataDto Converter(BinanceStreamBookPrice data, DateTime timeStamp)
@@ -25,13 +36,14 @@ namespace CryptoData.Storage
                 BestAskPrice = data.BestAskPrice,
                 BestAskQty = data.BestAskQuantity
             };
-
+            
             return returnData;
         }
 
-        public void AddData(CryptoDataDto data)
-        {
-            _context.Add(data);
+        public void AddData(List<CryptoDataDto> listToAdd)
+        { 
+            list.RemoveRange(0, listToAdd.Count());
+            _context.AddRange(listToAdd);
             _context.SaveChanges();
         }
     }

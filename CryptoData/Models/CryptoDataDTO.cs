@@ -1,10 +1,14 @@
-﻿namespace CryptoData.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CryptoData.Models
 {
     public class CryptoDataDto
     {
-        public int Id { get; set; }
-        public string TimeStamp { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long OrderBookUpdateId { get; set; }
+        public string TimeStamp { get; set; }
         public string Symbol { get; set; }
         public decimal BestBidPrice { get; set; }
         public decimal BestBidQty { get; set; }

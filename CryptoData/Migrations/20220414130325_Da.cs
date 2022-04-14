@@ -2,7 +2,7 @@
 
 namespace CryptoData.Migrations
 {
-    public partial class Data : Migration
+    public partial class Da : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,10 +10,8 @@ namespace CryptoData.Migrations
                 name: "CryptoData",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrderBookUpdateId = table.Column<long>(type: "bigint", nullable: false),
+                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Symbol = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BestBidPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BestBidQty = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -22,7 +20,7 @@ namespace CryptoData.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CryptoData", x => x.Id);
+                    table.PrimaryKey("PK_CryptoData", x => x.OrderBookUpdateId);
                 });
         }
 

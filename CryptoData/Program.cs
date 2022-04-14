@@ -7,9 +7,8 @@ namespace CryptoData
 {
     class Program
     {
-        private static string symbol = "BTCUSDT";
-        private static Methods _methods = new();
-        private static readonly object _lock = new();
+        private static readonly string _symbol = "BTCUSDT";
+        private static readonly Methods _methods = new();
 
         static void Main(string[] args)
         {
@@ -18,12 +17,10 @@ namespace CryptoData
                 AutoReconnect = true,
             });
 
-            client.SpotStreams.SubscribeToBookTickerUpdatesAsync(symbol, data =>
+            client.SpotStreams.SubscribeToBookTickerUpdatesAsync(_symbol, data =>
             {
-                lock (_lock)
-                {
-                    _methods.OnMessage(data.Data, data.Timestamp);
-                }
+                Console.WriteLine(data.Timestamp);
+                _methods.OnMessage(data); 
             });
             
             Console.ReadKey();

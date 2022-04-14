@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Binance.Net.Objects.Models.Spot.Socket;
 using CryptoData.Models;
@@ -11,19 +12,18 @@ namespace CryptoData.Tests
     public class MethodsTest
     {
         private Methods _methods;
-        private CryptoDataDbContext _context;
+        private CryptoDataDbContext context;
         public BinanceStreamBookPrice receivedData;
-        private DateTime time;
-        private string stringTime;
+        private DateTime _time;
+        private string _stringTime;
 
         [TestInitialize]
         public void Setup()
         {
             _methods = new();
-            _context = new();
-            
-            time = new(1487, 04, 11, 17, 13, 43, 861);
-            stringTime = time.ToString("yyyy.MM.dd HH:mm:ss:fff");
+            context = new();
+            _time = new(1487, 04, 11, 17, 13, 43, 861);
+            _stringTime = _time.ToString("yyyy.MM.dd HH:mm:ss:fff");
         }
 
         [TestMethod]
@@ -41,10 +41,10 @@ namespace CryptoData.Tests
             };
 
             //Act
-            CryptoDataDto dbData = _methods.Converter(receivedData, time);
+            CryptoDataDto dbData = _methods.Converter(receivedData, _time);
 
             //Assert
-            Assert.AreEqual(stringTime, dbData.TimeStamp);
+            Assert.AreEqual(_stringTime, dbData.TimeStamp);
             Assert.AreEqual(receivedData.UpdateId, dbData.OrderBookUpdateId);
             Assert.AreEqual(receivedData.BestAskPrice,dbData.BestAskPrice);
             Assert.AreEqual(receivedData.BestAskQuantity, dbData.BestAskQty);
@@ -57,23 +57,30 @@ namespace CryptoData.Tests
         public void AddData_CryptoDataDto_DataIsInDb()
         {
             //Arange
+            List<CryptoDataDto> list = new();
+            Random random = new();
+            int Id = random.Next(0, 100);
+
             CryptoDataDto CryptoData = new()
             {
-                TimeStamp = stringTime,
-                OrderBookUpdateId = 400900217,
+                TimeStamp = _stringTime,
+                OrderBookUpdateId = Id,
                 Symbol = "BNBUSDT",
                 BestBidPrice = 25.35190000m,
                 BestBidQty = 31.21000000m,
                 BestAskPrice = 25.36520000m,
                 BestAskQty = 40.66000000m
             };
-            int expected = _context.CryptoData.Count() + 1;
+
+            int expected = context.CryptoData.Count() + 1;
+            list.Add(CryptoData);
+            _methods.list.Add(CryptoData);
 
             //Act
-            _methods.AddData(CryptoData);
+            _methods.AddData(list);
 
             //Assert
-            Assert.AreEqual(expected, _context.CryptoData.Count());
+            Assert.AreEqual(expected, context.CryptoData.Count());
         }
     }
 }

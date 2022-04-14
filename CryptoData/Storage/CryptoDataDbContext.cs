@@ -8,7 +8,6 @@ namespace CryptoData
     public class CryptoDataDbContext : DbContext
     {
         public DbSet<CryptoDataDto> CryptoData { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
